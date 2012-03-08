@@ -1,6 +1,6 @@
 {
   "name": "color-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Color space converter, supports RGB and HSV.",
   "author": "Daisuke MINO <daisuke.mino@gmail.com>",
   "license": "MIT",
