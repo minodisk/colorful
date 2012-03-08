@@ -113,7 +113,7 @@ exports.HSV = class HSV
         throw new TypeError 'cannot cast'
 
   toString: ->
-    new RGB(@).toString()
+    RGB(@).toString()
 
   toNumber: ->
-    new RGB(@).toNumber()
+    RGB(@).toNumber()
