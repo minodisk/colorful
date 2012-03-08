@@ -69,7 +69,7 @@ exports.RGB = class RGB
       else
         throw new TypeError 'cannot cast'
 
-  toString: ->
+  toCSSString: ->
     str = @toNumber().toString(16)
     while str.length < 6
       str = "0#{str}"
@@ -112,8 +112,8 @@ exports.HSV = class HSV
       else
         throw new TypeError 'cannot cast'
 
-  toString: ->
-    RGB(@).toString()
+  toCSSString: ->
+    RGB(@).toCSSString()
 
   toNumber: ->
     RGB(@).toNumber()

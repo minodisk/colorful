@@ -16,6 +16,14 @@ module.exports =
       test.deepEqual RGB(new HSV(87.78947368421052, 0.76, 0.9803921568627451)), new RGB(0xa2, 0xfa, 0x3c)
       test.done()
 
+    'toCSSString': (test)->
+      test.strictEqual new RGB(0xa2fa3c).toCSSString(), '#a2fa3c'
+      test.done()
+
+    'toNumber': (test)->
+      test.strictEqual new RGB(0xa2fa3c).toNumber(), 0xa2fa3c
+      test.done()
+
   'HSV':
 
     'constructor': (test)->
@@ -28,4 +36,12 @@ module.exports =
 
     'cast RGB to HSV': (test)->
       test.deepEqual HSV(new RGB(0xa2, 0xfa, 0x3c)), new HSV(87.78947368421052, 0.76, 0.9803921568627451)
+      test.done()
+
+    'toCSSString': (test)->
+      test.strictEqual new HSV(87.78947368421052, 0.76, 0.9803921568627451).toCSSString(), '#a2fa3c'
+      test.done()
+
+    'toNumber': (test)->
+      test.strictEqual new HSV(87.78947368421052, 0.76, 0.9803921568627451).toNumber(), 0xa2fa3c
       test.done()
