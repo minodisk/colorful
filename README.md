@@ -50,3 +50,6 @@ Color space converter, supports RGB and HSV.
     var RGB = mn.dsk.RGB;
     var HSV = mn.dsk.HSV;
 
+## Examples
+
+[ColorJS Examples](http://minodisk.github.com/color-js/examples/)
