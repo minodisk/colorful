@@ -11,7 +11,3 @@ for h in [0...360]
   context.moveTo h + 0.5, 0
   context.lineTo h + 0.5, 90
   context.stroke()
-context.font = '36px sans-serif bold'
-context.textAlign = 'right'
-context.fillStyle = '#ffffff'
-context.fillText 'ColorJS', 360, 90
