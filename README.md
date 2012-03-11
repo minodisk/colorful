@@ -1,4 +1,4 @@
-<img src="color-js/raw/master/logo.png"/>
+# ColorJS
 
 Color space converter, supports RGB and HSV.
 
