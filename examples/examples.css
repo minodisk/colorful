@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+html {
+  background: black;
+}
+
+body, a {
+  color: white;
+}
