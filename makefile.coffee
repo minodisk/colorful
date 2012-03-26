@@ -52,7 +52,7 @@ startCompile = ->
       console.log "#{timeStamp()} Start compiling ..."
       flow.next()
     , (flow)->
-      fs.readFile 'src/color.coffee', 'utf8', flow.next
+      fs.readFile 'src/colorful.coffee', 'utf8', flow.next
     , (flow, code)->
       node = coffee.compile code.replace(/#if BROWSER([\s\S]*?)(#else[\s\S]*?)?#endif/g, (matched, $1, $2, offset, source)->
           if $2? then $2 else ''
@@ -63,9 +63,9 @@ startCompile = ->
       flow.next()
     , Flow.parallel(
       (flow)->
-        fs.writeFile "lib/node/color.js", node, flow.next
+        fs.writeFile "lib/node/colorful.js", node, flow.next
       , (flow)->
-        fs.writeFile "lib/browser/color.js", browser, flow.next
+        fs.writeFile "lib/browser/colorful.js", browser, flow.next
       , (flow)->
         ast = jsp.parse browser
         ast = pro.ast_mangle ast
@@ -74,7 +74,7 @@ startCompile = ->
         #          beautify    : true
         #          indent_start: 0
         #          indent_level: 2
-        fs.writeFile "lib/browser/color.min.js", uglified, flow.next
+        fs.writeFile "lib/browser/colorful.min.js", uglified, flow.next
     )
     , (flow)->
       console.log "#{ timeStamp() } Complete compiling!"
