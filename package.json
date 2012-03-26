@@ -1,12 +1,12 @@
 {
-  "name": "color-js",
-  "version": "0.0.3",
-  "description": "Color space converter, supports RGB and HSV.",
-  "author": "Daisuke MINO <daisuke.mino@gmail.com>",
-  "license": "MIT",
-  "main": "./lib/node/color",
-  "repository": {
-    "type": "git",
-    "url": "https://minodisk@github.com/minodisk/color-js.git"
+  "name"       :"colorful",
+  "version"    :"0.1.0",
+  "description":"Color space converter, supports RGB and HSV.",
+  "author"     :"Daisuke MINO <daisuke.mino@gmail.com>",
+  "license"    :"MIT",
+  "main"       :"./lib/node/colorful",
+  "repository" :{
+    "type":"git",
+    "url" :"https://minodisk@github.com/minodisk/colorful-js.git"
   }
 }

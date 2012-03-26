@@ -1,4 +1,4 @@
-{ RGB, HSV } = require '../lib/node/color'
+{ RGB, HSV } = require '../lib/node/colorful'
 
 module.exports =
 

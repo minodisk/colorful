@@ -1,4 +1,4 @@
-# ColorJS
+# ColorfulJS
 
 Color space converter, supports RGB and HSV.
 
@@ -52,4 +52,4 @@ Color space converter, supports RGB and HSV.
 
 ## Examples
 
-[ColorJS Examples](http://minodisk.github.com/color-js/examples/)
+[ColorfulJS Examples](http://minodisk.github.com/colorful-js/examples/)
