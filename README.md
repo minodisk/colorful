@@ -4,7 +4,7 @@ Color space converter, supports RGB and HSV.
 
 ## Installation (Node.js)
 
-    $ npm install color-js
+    $ npm install colorful
 
 ## Load Module (browser)
 
@@ -40,7 +40,7 @@ Color space converter, supports RGB and HSV.
 
 ### Node.js
 
-    var color = require('color-js');
+    var colorful = require('colorful');
     var RGB = color.RGB;
     var HSV = color.HSV;
 
