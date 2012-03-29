@@ -1,6 +1,5 @@
 ###
-Installation of CoffeeScript
-$ npm install -g coffee-script
+makefile.coffee v0.1.0
 
 Usage
 $ coffee makefile.coffee
@@ -13,30 +12,30 @@ Function
 
 fs = require 'fs'
 path = require 'path'
-Flow = require 'nestableflow'
+{spawn} = require 'child_process'
 coffee = require 'coffee-script'
-uglifyjs = require 'uglify-js'
-jsp = uglifyjs.parser
-pro = uglifyjs.uglify
-{ spawn } = require 'child_process'
+{parser, uglify} = require 'uglify-js'
+{Junc} = require 'junc'
 
+SRC_DIR = 'src'
+DST_DIR = 'lib'
+TEST_DIR = 'test'
+R_IF_BROWSER = /#if BROWSER([\s\S]*?)(#else[\s\S]*?)?#endif/g
 requested = false
 
 startWatch = ->
-  for dir in ['src', 'test']
-    fs.watch dir, onChange
-
-onChange = (event, filename)->
-  unless requested
-    requested = true
-    setTimeout (->
-      requested = false
-      startCompile()
-    ), 1000
+  for dir in [SRC_DIR, TEST_DIR]
+    fs.watch dir, (event, filename)->
+      unless requested
+        requested = true
+        setTimeout (->
+          requested = false
+          startCompile()
+        ), 1000
 
 timeStamp = ->
   date = new Date()
-  "#{ padLeft date.getHours() }:#{ padLeft date.getMinutes() }:#{ padLeft date.getSeconds() }"
+  "#{padLeft date.getHours()}:#{padLeft date.getMinutes()}:#{padLeft date.getSeconds()}"
 
 padLeft = (num, length = 2, pad = '0')->
   str = num.toString 10
@@ -45,49 +44,63 @@ padLeft = (num, length = 2, pad = '0')->
   str
 
 startCompile = ->
-  node = ''
-  browser = ''
-  flow = Flow.serial(
-    (flow)->
+  Junc.serial(
+    Junc.func(->
       console.log "#{timeStamp()} Start compiling ..."
-      flow.next()
-    , (flow)->
-      fs.readFile 'src/colorful.coffee', 'utf8', flow.next
-    , (flow, code)->
-      node = coffee.compile code.replace(/#if BROWSER([\s\S]*?)(#else[\s\S]*?)?#endif/g, (matched, $1, $2, offset, source)->
-          if $2? then $2 else ''
-      )
-      browser = coffee.compile code.replace(/#if BROWSER([\s\S]*?)(#else[\s\S]*?)?#endif/g, (matched, $1, $2, offset, source)->
-          if $1? then $1 else ''
-      )
-      flow.next()
-    , Flow.parallel(
-      (flow)->
-        fs.writeFile "lib/node/colorful.js", node, flow.next
-      , (flow)->
-        fs.writeFile "lib/browser/colorful.js", browser, flow.next
-      , (flow)->
-        ast = jsp.parse browser
-        ast = pro.ast_mangle ast
-        ast = pro.ast_squeeze ast
-        uglified = pro.gen_code ast
-        #          beautify    : true
-        #          indent_start: 0
-        #          indent_level: 2
-        fs.writeFile "lib/browser/colorful.min.js", uglified, flow.next
+      fs.readdir SRC_DIR, @next
     )
-    , (flow)->
-      console.log "#{ timeStamp() } Complete compiling!"
-      flow.next()
+    Junc.func((err, files)->
+      if err?
+        console.log err
+      else
+        @next files
+    )
+    Junc.each(
+      Junc.serial(
+        Junc.func((file)->
+          @local.basename = path.basename file, path.extname(file)
+          fs.readFile path.join(SRC_DIR, file), 'utf8', @next
+        )
+        Junc.func((err, code)->
+          if err?
+            @skip()
+          else
+            node = coffee.compile(
+              code.replace R_IF_BROWSER, (matched, $1, $2, offset, source)->
+                if $2? then $2 else ''
+            )
+            browser = coffee.compile(
+              code.replace R_IF_BROWSER, (matched, $1, $2, offset, source)->
+                if $1? then $1 else ''
+            )
+            parsed = parser.parse browser
+            parsed = uglify.ast_mangle parsed
+            parsed = uglify.ast_squeeze parsed
+            uglified = uglify.gen_code parsed
+            @next [
+              { path: "node/#{@local.basename}.js", code: node }
+              { path: "browser/#{@local.basename}.js", code: browser }
+              { path: "browser/#{@local.basename}.min.js", code: uglified }
+            ]
+        )
+        Junc.each(
+          Junc.func((file)->
+            fs.writeFile path.join(DST_DIR, file.path), file.code, @next
+          )
+        )
+      )
+    )
+    Junc.func(->
+      console.log "#{timeStamp()} Complete compiling!"
+      @next()
+    )
   )
-  flow.onError = (err)->
-    console.log "Error: #{ err }"
-  flow.onComplete = test
-  flow.start()
+  .complete(test)
+  .start()
 
 test = ->
   console.log "#{timeStamp()} Start testing ..."
-  nodeunit = spawn 'nodeunit', ['test']
+  nodeunit = spawn 'nodeunit', [TEST_DIR]
   nodeunit.stderr.setEncoding 'utf8'
   nodeunit.stderr.on 'data', (data)->
     console.log data.replace(/\s*$/, '')
